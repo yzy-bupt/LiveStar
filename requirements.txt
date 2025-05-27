@@ -1,0 +1,15 @@
+datasets==3.3.2
+decord==0.6.0
+deepspeed==0.14.4
+flash_attn==2.7.4.post1
+imageio==2.37.0
+opencv_python==4.11.0.86
+peft==0.10.0
+pycocoevalcap==1.2
+PyYAML==6.0.2
+sentencepiece==0.1.99
+timm==0.9.12
+torch==2.5.1
+torchvision==0.20.1
+tqdm==4.67.1
+transformers==4.37.2

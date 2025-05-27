@@ -1,0 +1,45 @@
+{
+    "ego4d": {
+        "root": "/mnt/workspace/xxx/xxx/",
+        "annotation": "/mnt/workspace/xxx/xxx/ego4d/train_data.jsonl",
+        "data_augment": false,
+        "repeat_time": 1,
+        "length": 16000
+    },
+    "streaming_caption": {
+        "root": "/mnt/workspace/xxx/workspace/",
+        "annotation": "/mnt/workspace/xxx/xxx/StreamingCaption/train_data.jsonl",
+        "data_augment": false,
+        "repeat_time": 1,
+        "length": 19987
+    },
+    "action_count": {
+        "root": "/mnt/workspace/xxx/xxx/",
+        "annotation": "/mnt/workspace/xxx/xxx/StreamingQA/action_count_train.jsonl",
+        "data_augment": false,
+        "repeat_time": 2,
+        "length": 6000
+    },
+    "addition_data": {
+        "root": "/mnt/workspace/xxx/xxx/",
+        "annotation": "/mnt/workspace/xxx/xxx/StreamingQA/addition_data_train.jsonl",
+        "data_augment": false,
+        "repeat_time": 2,
+        "length": 3500
+    },
+    "character_order": {
+        "root": "/mnt/workspace/xxx/xxx/",
+        "annotation": "/mnt/workspace/xxx/xxx/StreamingQA/character_order_train.jsonl",
+        "data_augment": false,
+        "repeat_time": 2,
+        "length": 4500
+    },
+    "moving_count": {
+        "root": "/mnt/workspace/xxx/xxx/",
+        "annotation": "/mnt/workspace/xxx/xxx/StreamingQA/moving_count_train.jsonl",
+        "data_augment": false,
+        "repeat_time": 2,
+        "length": 6000
+    }
+}
+  
