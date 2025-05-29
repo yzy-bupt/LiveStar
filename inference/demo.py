@@ -161,7 +161,7 @@ generation_config = dict(
     repetition_penalty = 1.05,
 )
 
-video_path = "your_video.mp4"
+video_path = "your_video.mp4" # ../assets/videos/9Uly5zVvl3Q.mp4
 num_segments=128
 decode_factor=1.03
 
