@@ -158,6 +158,7 @@ To run an inference with the LiveStar model, follow these steps:
    ```bash
    python demo_ui.py
    ```
+![Visualization](/assets/images/LiveStar_visualization.png)
 
 ## **Training**
 
