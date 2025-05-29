@@ -137,9 +137,36 @@ tar -xzvf allVideo.tar.gz
 
 After completing these steps, you should see the extracted video files in the current directory.
 
-## **Inference**
-
 ## **Training**
+
+### **1. Prepare *Frame-Caption* Format Data**
+
+(1) To fine-tune the LiveStar model, prepare your own Supervised Fine-Tuning (SFT) dataset as interleaved frame-caption sequences. Create a `.jsonl` file under the `LiveStar/datasets` directory, following the structure of `train_data.jsonl`.
+
+(2) Next, create a meta file in JSON format under the `LiveStar/shell/data` directory. This file should provide metadata for your dataset and follow the format shown in `omnistar_train_sample.json`.
+
+
+### **2. Fine-tune the Pre-trained Model**
+You can fine-tune the [LiveStar-8B](https://huggingface.co/Anonymous4LiveStar/LiveStar_8B) model directly (recommended), or start from the base [LiveStar-InternVideo-8B](https://huggingface.co/Anonymous4LiveStar/LiveStar_InternVideo_8B) model for full SFT training. You may choose to fine-tune the model using either the full-parameter fine-tuning script or the lightweight LoRA adapter depending on your available GPU resources.
+
+
+Before starting fine-tuning, make sure to set the `--meta_path` argument to the JSON meta file you created in the previous step.  
+
+The model path in the shell scripts is set to `./inference` by default.
+
+In the default configuration, the visual encoder is frozen to reduce memory usage. You may unfreeze it if you wish to improve performance, especially if you have sufficient computational resources.
+
+🎈 Fine-tuning the full model typically requires 8× A800 80G GPUs.  
+🎈 Fine-tuning with LoRA is much lighter and can be done with just 2× A800 80G GPUs.  
+
+Example fine-tuning commands:
+```bash
+# Fine-tune the full LiveStar model with 8 GPUs (~77GB per GPU)
+GPUS=8 PER_DEVICE_BATCH_SIZE=2 sh shell/scripts/LiveStar-8B_full.sh
+
+# Fine-tune LiveStar with LoRA on 2 GPUs (~79GB per GPU)
+GPUS=2 PER_DEVICE_BATCH_SIZE=2 sh shell/scripts/LiveStar-8B_lora.sh
+```
 
 ## **OmniStar**
 
@@ -182,211 +209,4 @@ Video frame extraction can be directly run the following code. Run the following
 
 ```Bash
 python extract_video_frame/extract_video_frame_1s.py --data_dir allVideo --output_dir allVideo_frame
-```
-
-
-
-
-### **Evaluation**
-
-Before running the script, please ensure you modify the following paths to match your local directory structure. This is crucial for the script to locate the necessary files and directories correctly. Below are the paths that need to be updated:
-
-- answers_path: This should point to the directory where your answer files are stored.
-- gt_dir: This should point to the directory containing your ground truth data.
-- con_dir: This should point to the directory where your ConQA data is located.
-- eval_SingleQA_result: This should be the path where you want to save the evaluation results for SingleQA.
-- eval_chainQA_result: This should be the path where you want to save the evaluation results for ChainQA.
-- eval_ConQA_result: This should be the path where you want to save the evaluation results for ConQA.
-
-Example
-
-```Bash
-answers_path = '/path/to/your/answers_path'
-gt_dir = "/path/to/your/gt_dir"
-con_dir = "/path/to/your/conQA_data_dir"
-eval_SingleQA_result = '/path/to/your/save_file_for_SingleQA'
-eval_chainQA_result = '/path/to/your/save_file_for_ChainQA'
-eval_ConQA_result = '/path/to/your/save_file_for_ConQA'
-```
-
-#### **8.1.QA Evaluation**
-
-Run the following command:
-
-```Bash
-python evaluation/eval_SingleQA_gpt4_gpt4o.py
-```
-
-#### **8.2.Dialogue Evaluation**
-
-Run the following command:
-
-```Bash
-python evaluation/eval_chainQA_gpt4_gpt4o.py
-```
-
-#### **8.3.Streaming Evaluation**
-
-Run the following command:
-
-```Bash
-python evaluation/eval_ConQA_gpt4_gpt4o.py
-```
-
-## **Evaluation of StreamingChat**
-
-![model](/assets/images/model_framework.png)
-
-1. ### **Data Preparation**
-
-Data download reference：
-
-https://internvl.readthedocs.io/en/latest/get_started/eval_data_preparation.html
-
-1. ### **MMBench**
-
-Run the following command:
-
-```Bash
-GPUS=8 bash evaluate.sh work_dirs/internvl_chat_v2_0/internvl2_8b_internlm2_7b_dynamic_res_2nd_finetune_yzy_v6_merge mmbench-test-en --dynamic
-```
-
-Then, submit the results to the[ evaluation server](https://mmbench.opencompass.org.cn/mmbench-submission). The expected test results are: 
-
-overall: 80.66
-
-1. ### **CCBench**
-
-Run the following command:
-
-```Bash
-GPUS=8 bash evaluate.sh work_dirs/internvl_chat_v2_0/internvl2_8b_internlm2_7b_dynamic_res_2nd_finetune_yzy_v6_merge ccbench-dev --dynamic
-```
-
-Then, submit the results to the[ evaluation server](https://mmbench.opencompass.org.cn/mmbench-submission). The expected test results are: 
-
-overall:74.71
-
-1. ### **Tiny LVLM**
-
-Run the following command:
-
-```Bash
-GPUS=8 bash evaluate.sh work_dirs/internvl_chat_v2_0/internvl2_8b_internlm2_7b_dynamic_res_2nd_finetune_yzy_v6_merge tiny_lvlm --dynamic
-```
-
-The expected test results are:
-
-```Bash
-Visual_Perception: 0.4825
-ObjecCHallucination: 0.9033333333333333
-Visual_Commonsense: 0.636
-Visual_Knowledge_Acquisition: 0.6842857142857143
-Visual_Reasoning: 0.6654545454545454
-Overall: 3.371573593073593
-```
-
-1. ### **MM-Vet**
-
-Run the following command:
-
-```Bash
-GPUS=8 bash evaluate.sh work_dirs/internvl_chat_v2_0/internvl2_8b_internlm2_7b_dynamic_res_2nd_finetune_yzy_v6_merge mmvet --dynamic
-```
-
-Then, submit the results to the[ evaluation server](https://huggingface.co/spaces/whyu/MM-Vet_Evaluator). The expected test results are:
-
-runs:36.9
-
-1. ### **MMMU**
-
-Run the following command:
-
-```Bash
-GPUS=8 bash evaluate.sh work_dirs/internvl_chat_v2_0/internvl2_8b_internlm2_7b_dynamic_res_2nd_finetune_yzy_v6_merge mmmu-val --dynamic
-```
-
-The expected test results are:
-
-```Bash
-{'Overall-Art and Design': {'num': 120, 'acc': 0.592}, 'Art': {'num': 30, 'acc': 0.733}, 'Art_Theory': {'num': 30, 'acc': 0.6},  'Overall': {'num': 900, 'acc': 0.49}}
-```
-
-1. ### **MMBench Video**
-
-```Bash
-git clone https://github.com/open-compass/VLMEvalKit.git && cd VLMEvalKit && pip install -e .
-```
-
-You can place the required keys in $VLMEvalKit/.env or directly set them as the environment variable. If you choose to create a .env file, its content will look like:
-
-```Bash
-# The .env file, place it under $VLMEvalKit
-# API Keys of Proprietary VLMs
-# QwenVL APIs
-DASHSCOPE_API_KEY=
-# Gemini w. Google Cloud Backends
-GOOGLE_API_KEY=
-# OpenAI API
-OPENAI_API_KEY=
-OPENAI_API_BASE=
-# StepAI API
-STEPAI_API_KEY=
-# REKA API
-REKA_API_KEY=
-# GLMV API
-GLMV_API_KEY=
-# CongRong API
-CW_API_BASE=
-CW_API_KEY=
-# SenseChat-V API
-SENSECHAT_AK=
-SENSECHAT_SK=
-# Hunyuan-Vision API
-HUNYUAN_SECRET_KEY=
-HUNYUAN_SECRET_ID=
-# You can also set a proxy for calling api models during the evaluation stage
-EVAL_PROXY=
-```
-
-Fill the blanks with your API keys (if necessary). Those API keys will be automatically loaded when doing the inference and evaluation.
-
-Run the following command:
-
-```Bash
-torchrun --nproc-per-node=8 run.py --data MMBench-Video --model InternVL2-8B --verbose --nframe 8
-```
-
-The expected test results are:
-
-```Bash
- "coarse_all": {
-        "CP": "1.53",
-        "FP-S": "1.41",
-        "FP-C": "1.16",
-        "HL": "0.21",
-        "LR": "1.06",
-        "AR": "1.55",
-        "RR": "1.59",
-        "CSR": "1.37",
-        "TR": "1.31",
-        "Perception": "1.35",
-        "Reasoning": "1.39",
-        "Overall": "1.37"
-    },
-    "coarse_valid": {
-        "CP": "1.53",
-        "FP-S": "1.41",
-        "FP-C": "1.16",
-        "HL": "0.21",
-        "LR": "1.06",
-        "AR": "1.55",
-        "RR": "1.59",
-        "CSR": "1.37",
-        "TR": "1.31",
-        "Perception": "1.35",
-        "Reasoning": "1.39",
-        "Overall": "1.37"
-    }
-}
 ```
