@@ -154,11 +154,10 @@ To run an inference with the LiveStar model, follow these steps:
    ```bash
    python demo.py
    ```
-
 (4) If you want a more intuitive experience, we provide a visualization demo based on Gradio. Please run:
-   ```bash
-   python demo_ui.py
-   ```
+   ```bash
+   python demo_ui.py
+   ```
 
 ## **Training**
 
