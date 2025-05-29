@@ -191,7 +191,7 @@ GPUS=8 PER_DEVICE_BATCH_SIZE=2 sh shell/scripts/LiveStar-8B_full.sh
 GPUS=2 PER_DEVICE_BATCH_SIZE=2 sh shell/scripts/LiveStar-8B_lora.sh
 ```
 
-## **OmniStar**
+## **OmniStar (Coming Soon)**
 
 This section provides instructions for reproducing the annotation and evaluation of OmniStar.
 
