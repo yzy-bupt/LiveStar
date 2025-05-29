@@ -41,7 +41,7 @@ This guide provides step-by-step instructions to set up the LiveStar framework, 
 conda create -n LiveStar -y python=3.9.21
 conda activate LiveStar
 conda install -y -c pytorch pytorch=2.5.1 torchvision=0.10.1
-pip install transformers=4.37.2 opencv-python=4.11.0.84 imageio=2.37.0 decord=0.6.0 gradio=4.44.1
+pip install transformers==4.37.2 opencv-python==4.11.0.84 imageio==2.37.0 decord==0.6.0 gradio==4.44.1
 pip install flash-attn --no-build-isolation
 ```
 Alternative: Install via requirements.txt (recommended):
@@ -137,6 +137,24 @@ tar -xzvf allVideo.tar.gz
 
 After completing these steps, you should see the extracted video files in the current directory.
 
+## **Inference**
+
+![SVeD](/assets/images/SVeD.png)
+
+To run an inference with the LiveStar model, follow these steps:
+
+(1) Before using LiveStar for inference, ensure you have downloaded the pre-trained model weights. Then, navigate to the inference directory:
+   ```bash
+   cd LiveStar/inference
+   ```
+
+(2) Ensure that the model path in your script matches the actual path to the downloaded weights: `model_path = 'LiveStar/inference'`. To use your own video file, modify the following line: `video_path = "sample.mp4"`.
+
+(3) Execute the inference script using the following command:
+   ```bash
+   python demo.py
+   ```
+
 ## **Training**
 
 ### **1. Prepare *Frame-Caption* Format Data**
@@ -172,7 +190,7 @@ GPUS=2 PER_DEVICE_BATCH_SIZE=2 sh shell/scripts/LiveStar-8B_lora.sh
 
 This section provides instructions for reproducing the annotation and evaluation of OmniStar.
 
-![framework](/assets/images/framework.png)
+![pipline](/assets/images/pipline_RNG.png)
 
 ### **1. Data Filtering**
 
@@ -193,20 +211,13 @@ torchrun --standalone --nproc_per_node 8 Data_Filtering/Open-Sora-main/tools/sco
 
 With these information of videos above, you can filtering is conducted to retain only those videos containing 5 to 15 scenes,Then you can retain videos with an aesthetic score of 4 or above and with optical flow scores within the range of 0.5 to 100
 
-### **2. Scene Detection and Video Splitting**
-
-First you should have a meta file with column 'path' for the videos. Then run the following command:
-
-```Bash
-python Data_Filtering/Open-Sora-main/tools.scene_cut.scene_detect.py ---output /path_to_meta.csv
-```
-
-The output is {prefix}_timestamp.csv with column timestamp. Each cell in column timestamp is a list of tuples, with each tuple indicating the start and end timestamp of a scene (e.g., [('00:00:01.234', '00:00:02.345'), ('00:00:03.456', '00:00:04.567')]).
-
-### **3. Video Frame Extracting**
+### **2. Video Frame Extracting**
 
 Video frame extraction can be directly run the following code. Run the following command:
 
 ```Bash
-python extract_video_frame/extract_video_frame_1s.py --data_dir allVideo --output_dir allVideo_frame
+python utils/extract_video_frame.py --data_dir allVideo --output_dir allVideo_frame
 ```
+
+![RNG](/assets/images/RNG_case.png)
+
