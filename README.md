@@ -23,7 +23,7 @@ This is the **anonymous repository** for the paper ***LiveStar: Live-Streaming A
 
 **Illustration of online video understanding.** (a) Taking the RNG task as an example, online video understanding requires Video-LLMs to handle continuous streams and output at appropriate times; (b) Existing methods overly rely on learning the EOS token, leading to poor inference performance; (c)-(e) LiveStar establishes an effective response-silence training and inference framework by SCAM and SVeD without compromising basic video understanding capabilities.
 
-![overview](/assets/images/overview.png)
+![overview](./assets/images/overview.png)
 
 ### **Abstract**
 
@@ -139,7 +139,7 @@ After completing these steps, you should see the extracted video files in the cu
 
 ## **Inference**
 
-![SVeD](/assets/images/SVeD.png)
+![SVeD](./assets/images/SVeD.png)
 
 To run an inference with the LiveStar model, follow these steps:
 
@@ -158,7 +158,7 @@ To run an inference with the LiveStar model, follow these steps:
    ```bash
    python demo_ui.py
    ```
-![Visualization](/assets/images/LiveStar_visualization.png)
+![Visualization](./assets/images/LiveStar_visualization.png)
 
 ## **Training**
 
@@ -195,7 +195,7 @@ GPUS=2 PER_DEVICE_BATCH_SIZE=2 sh shell/scripts/LiveStar-8B_lora.sh
 
 This section provides instructions for reproducing the annotation and evaluation of OmniStar.
 
-![pipline](/assets/images/pipline_RNG.png)
+![pipline](./assets/images/pipline_RNG.png)
 
 ### **1. Data Filtering**
 
@@ -224,5 +224,5 @@ Video frame extraction can be directly run the following code. Run the following
 python utils/extract_video_frame.py --data_dir allVideo --output_dir allVideo_frame
 ```
 
-![RNG](/assets/images/RNG_case.png)
+![RNG](./assets/images/RNG_case.png)
 
